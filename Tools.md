@@ -2,9 +2,10 @@
 
 http://www.haskell.org/platform/
 
+- ghc - compiler to native code
 - ghci - interactive haskell
 	- `:quit` to quit
-
+- runghc - run a haskell script without compiling
 
 ## Cabal - package manager
 
