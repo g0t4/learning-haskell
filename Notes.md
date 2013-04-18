@@ -12,13 +12,7 @@ http://www.haskell.org/haskellwiki/Introduction
 	- quicksort: `qsort (p:xs) = qsort [x | x<-xs, x<p] ++ [p] ++ qsort [x | x<-xs, x>=p]`
 		- take a list, take the first element p and the remaining list xs, three lists with p in the middle. the two outer lists are computed by applying a list comprehension quicksort(xs.where(x<p)) and quicksort(xs.where(x>=p))
 		- this sacrifices efficiency for conciseness and is ELEGANT!
-		- equivalent in c# (though not going to be as efficient as haskell most likely
-			- qsort = (List<T> items) => {
-				if(items.IsEmpty()) return items;
-				var p = items.First();
-				var xs = items.Skip(1);
-				return qsort(xs.Where(x => x < p)).Union([p]).Union(qsort(xs.Where(x => x >= p)));
-			}
+		- one thing of note is you can use functional concepts in imperative languages, the linq version of the quicksort above is not much different, just perhaps not as much syntactic sugar but pretty darn close (see test files I added in this commit)
 			
 ## Language
 
@@ -33,3 +27,6 @@ http://www.haskell.org/haskellwiki/Introduction
 	- next lines are one or more patterns for handling that signature
 	- 
 
+## Free book
+
+http://book.realworldhaskell.org/read
