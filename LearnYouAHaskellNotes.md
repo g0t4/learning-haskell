@@ -71,9 +71,77 @@
 		- snd - second item in tuple
 	- zip operator produces tuples
 	- all triangles with perimeter of 24 and with length of each side an integer less than 10  
-	- [[a,b,c] | a <- [1..1000], b <- [1..1000], c <- [1..1000], a + b + c == 24, a*a + b*b == c*c]
-
+	- [(a,b,c) | a <- [1..1000], b <- [1..1000], c <- [1..1000], a + b + c == 24, a*a + b*b == c*c]
 
 ### strings
 - list of characters 
 	- `"hello" == ['h', 'e', 'l', 'l', 'o']` evaluates true
+
+## Chapter 3 - Types and Typeclasses
+
+- Types are Capitalized
+- `:t` returns type information
+- `::` reads "has type of"
+- functions have type declarations too, good idea for all but the simplest functions
+	- functionName :: type
+		- ie: length :: [a] -> Int
+	- multi parameter, repeated ->
+		- ie: multiply :: Int -> Int -> Int
+- Int - integer, bounded, usually 32 bit
+- Integer - integer, not bounded
+- Float
+- Double
+- Bool
+- Char
+- Each variant of a tuple is a unique type based on length and each index's type, also () is an empty tuple of its own type
+- :t head 
+	- head :: [a] -> a
+	- a is a type variable, a generic type parameter, polymorphic
+- Typeclasses - like interfaces
+	- :t (==)
+		- (==) :: (Eq a) => a -> a -> Bool
+		- Eq is an equality interface
+			- == - equality
+			- /= - inequality
+	- :t (*)
+		- (*) :: (Num a) => a -> a -> a
+		- Num is a numeric interface
+			- *, -, /, +
+	- (Eq a) => and (Num a) => is a class constraint (like generic constraints in other languages)
+	- Ord a - ordering
+		- >, <, >= and <= etc
+		- Ordering: GT, LT, EQ (seems like an enumeration, a set)
+		- compare :: (Ord a) => a -> a -> Ordering
+		- must have Eq interface first
+	- Show
+		- show :: (Show a) => a -> String (think print)
+	- Read
+		- read :: (Read a) => String -> a 
+		- think parse and interpret type
+		- careful, can be ambiguous, needs usage to infer type
+	- Enum
+		- sequentially ordered types, can be enumerated
+		- Ordering
+		- succ and pred work on these
+		- Bounded
+			- upper and lower bounded Enum
+			- maxBound :: Enum a => a
+			- minBound :: Enum a => a
+			- polymorphic constant
+	- Num
+		- behave like numbers
+		- Numbers appear to be polymorphic constants
+			- 3 :: Num a => a
+			- Because a number could be an Int, Integer, Float, or Double 
+		- Num inherits from Show and Eq
+		- Subsets
+			- Integral
+				- Int and Integer
+			- Floating
+				- Float and Double
+		- fromIntegral :: (Num b, Integral a) => a -> b
+			- essentially casts an Integral to Num
+- type annotation
+	- be explicit about type, in case it can't be inferred, like with read
+	- read "5" :: Int - returns 5
+- 
