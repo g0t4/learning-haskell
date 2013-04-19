@@ -144,4 +144,63 @@
 - type annotation
 	- be explicit about type, in case it can't be inferred, like with read
 	- read "5" :: Int - returns 5
-- 
+
+## Chapter 4 - Syntax in Functions
+
+### Pattern matching
+
+"patterns are a way of making sure a value conforms to some form and deconstructing it"
+
+Can implement a function several different ways depending on constraints on the inputs
+
+see haskells\sum.hs
+
+- _ if you want to ignore a parameter
+- can match with cons operator x:xs to split a list on the head (x) and tail (xs).. also x:y:z:remainder for first three elements followed by remainder
+- list comprehensions actually use pattern matching in the bind clause, skips things that don't match
+- `as patterns` - break something up but keep reference to entire thing
+	- all@(x:xs) - all are all items, x is head, xs is tail
+
+### Guards
+
+Another control flow in defining programs, like an if statement, for readability, note the `=` comes after the guard, like in a pattern
+
+sample:
+
+max' :: Num a => a -> a -> a
+max' a b
+	| a > b = a
+	| otherwise = b
+
+side note: functions can be declared infix with backticks
+myCompare :: (Ord a) => a -> a -> Ordering  
+a `myCompare` b = compare a b
+
+### where bindings
+
+- similar to let binding, but visible to whole function
+- for reuse
+- can be functions
+- can use pattern matching in where clauses
+- great for nested helper functions
+
+### let bindings
+
+- like a where binding, but can be placed anywhere
+	- can be used in list comprehensions, omit the `in` portion as it is implicit, variables can be used in map and predicates
+- "let bindings are expressions themselves", "where bindings are just syntactic constructs"
+- syntax is `let bindings in expression`
+	- only visible within the context of the expression after `in`
+- if inline, separate bindings with semicolons `;`
+- can pattern match ie: let (a,b,c) = (1,2,3) in a+b+c
+
+ie: [let square x = x * x in (square 5, square 3, square 2)]
+
+### case expressions
+
+- case / of
+- pattern matching is syntactic sugar for case expressions
+	case expression of pattern -> result  
+	                   pattern -> result  
+	                   pattern -> result 
+- can be used pretty much anywhere
