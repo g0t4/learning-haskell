@@ -5,6 +5,7 @@ http://www.haskell.org/platform/
 - ghc - compiler to native code
 - ghci - interactive haskell
 	- `:quit` to quit
+	- `:l myfunctions` to load/reload a haskell script from myfunctions.hs
 - runghc - run a haskell script without compiling
 
 ## Cabal - package manager
