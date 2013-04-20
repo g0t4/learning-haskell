@@ -354,7 +354,7 @@ module Name (function export list) where
 	- two value constructors: Circle and Rectangle
 	- 3 anonymous arguments
 	- deriving (Show) makes it show-able automatically
-- simple format for declaring show-able fields
+- **record syntax** for declaring types with named fields (getters)
 	- data Person = Person { firstName :: String  
                      , lastName :: String  
                      , age :: Int  
@@ -364,8 +364,49 @@ module Name (function export list) where
                      } deriving (Show)
 ### Type parameters
 
+- type constructors produce new types, whereas value constructors produce new values
 - Like generic (parameterized) types in c#
 - data Maybe a = Nothing | Just a
 - Dictionaries, Lists, Sets fall in here
 
 ### Derived instances
+
+- typeclasses are like interfaces in OOP languages
+- types are instances of typeclasses if they support the behavior of the typeclass
+- Eq, Ord, Enum, Bounded, Show and Read can all be automatically applied with default conventions with just using derving suffix to the appropriate value constructor
+	- Eq is on all fields defined, if they all implement Eq
+	- Show is on all fields, if they all implement Show
+	- Read is reverse of Show
+	- Ord 
+		- different value constructors, the first defined constructor(s) will be considered first in Ord
+
+### Type synonyms
+
+- alias types
+- ie: type String = [Char]
+	- type PhoneBook = [(String,String)] 
+- can help with readability, shows intent of type usage in a scenario
+- can be parameterized
+	- type AssocList k v = [(k,v)] 
+- aside - concrete type: no generic parameters
+- can be formed from partial application of type parameters
+
+### Recursive data structures
+
+- Types that are composed of themselves
+- ie: data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)  
+
+- aside: infix
+	- functions with special characters only are automatically infix
+	- can make constructors infix (they are just functions to produce types)
+	- syntax: infixr/infixl Int symbol
+		- right or left associative respectively
+		- Int is how tightly it binds (precedence)
+		- ie: 
+			infixr 5  ++ 
+			(++) :: [a] -> [a] -> [a]  
+			[]     ++ ys = ys  
+			(x:xs) ++ ys = x : (xs ++ ys)  
+
+
+
