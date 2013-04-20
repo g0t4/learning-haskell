@@ -210,3 +210,52 @@ ie: [let square x = x * x in (square 5, square 3, square 2)]
 pattern matching is great for edge cases, along with guards for conditions
 
 see elem.hs in haskells code samples
+
+## Chapter 6 - High order functions
+
+- High order functions - functions that take and return functions
+	- multThree 3 5 9 == ((multThree 3) 5) 9
+- Curried - All functions in haskell are **curried** and only take one parameter, multi param functions create a function that takes the first argument, and returns a function that takes the second argument and returns a function that takes the third argument and returns the final result.
+- **Partially applied** - if not all params are passed
+	- essentially returns a function that picks up where you left off params
+	- use infix operator to omit/skip the first parameter and any intermediary parameter
+- Func parameters - use () to indicate passing a function as an argument
+- filter, map - alternatives to using a list comprehension syntax
+- takeWhile - easy enough
+
+### Lambdas
+
+left off here
+
+- syntax: \params -> body
+- usually surround with () to separate from subsequent expressions
+- can include pattern matching, but only one match
+- **pattern matching** is often more concise than a lambda
+	map (+3) [1,2,3]  OR  map (\x -> x + 3) [1,2,3]
+
+### fold, scan
+
+- foldl / foldr - like Aggregate in LINQ, takes initial accumulator value and a function that operates on the current item and the current accumulator value to return a new accumulator value
+- foldl1 / foldr1 - fold but accumulator is initialized to the first or last item respectively
+- scanl / scanr - like Aggregate but produces a stream of the current accumulator value instead of just the last value of the accumulator
+
+### $
+
+infix operator
+
+($) :: (a -> b) -> a -> b  
+f $ x = f x
+
+- function application like a space but with the lowest precedence
+- great way to avoid parenthesis
+
+f $ g x y == f (g x y)
+
+### Function composition
+
+`.` operator - infix
+
+(.) :: (b -> c) -> (a -> b) -> a -> c  
+f . g = \x -> f (g x) 
+
+- cleans up expressions (point free style), but if it's really long (many compositions), consider using let to name intermediaries to help with readability
