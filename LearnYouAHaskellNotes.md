@@ -204,3 +204,9 @@ ie: [let square x = x * x in (square 5, square 3, square 2)]
 	                   pattern -> result  
 	                   pattern -> result 
 - can be used pretty much anywhere
+
+## Chapter 5 - Recursion
+
+pattern matching is great for edge cases, along with guards for conditions
+
+see elem.hs in haskells code samples
