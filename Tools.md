@@ -6,6 +6,8 @@ http://www.haskell.org/platform/
 - ghci - interactive haskell
 	- `:quit` to quit
 	- `:l myfunctions` to load/reload a haskell script from myfunctions.hs
+	- :m + Data.List
+		- load a module
 - runghc - run a haskell script without compiling
 
 ## Cabal - package manager

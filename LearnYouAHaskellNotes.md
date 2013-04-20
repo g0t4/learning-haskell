@@ -259,3 +259,85 @@ f $ g x y == f (g x y)
 f . g = \x -> f (g x) 
 
 - cleans up expressions (point free style), but if it's really long (many compositions), consider using let to name intermediaries to help with readability
+
+## Chapter 7 - modules
+
+- Prelude - base module included by default
+- load syntax
+	- import name
+	- import name (list)
+		- only load specified functions/types in list
+	- import Data.List hiding (list)
+		- exclude specified functions/types in list
+- namespacing
+	- import qualified Data.Map 
+		- will have to use Data.Map.filter instead of just filter
+	- import qualified Data.Map  as M
+		- M.filter instead of Data.Map.filter
+- standard libraries: http://www.haskell.org/ghc/docs/latest/html/libraries/
+	- search via hoogle: http://www.haskell.org/hoogle/
+- Data.List
+	- intersperse, intercalate, transpose
+	- foldl' and foldl1' - strict form of foldl, not lazy loaded, good for long lists to avoid stack overflows, otherwise the aggregate is a promise (thunk) to return a value
+	- concat - like selectmany in c#
+	- concatMap == combines map followed by a concat
+	- and, or, any, all
+	- iterate, splitAt, takeWhile, dropWhile
+	- span - like takeWhile but returns both the takeWhile result and the remainder, break is a variation on this
+	- sort
+	- group - groups adjacent equal items
+	- inits and tails 
+	- isInfixOf, isPrefixOf, isSuffixOf - contains, startswith, endswith
+	- elem and notElem
+	- partition, predicate to split list into two lists
+	- find - Maybe a - FirstOrDefault in LINQ
+	- elemIndex - Maybe Int - index of elem
+	- elemIndicies - list of indices of all matches of elem
+	- findIndex - index of first match of predicate
+	- lines - split a string on line breaks
+	- unlines - combine a list of strings into one with line breaks
+	- words/unwords - split/combine words
+	- nub - unique elements in a string
+	- delete - delete first occurance of element
+	- \\ - infix operator - delete each item in the right list in the left list
+	- union (removes duplicates), intersect
+	- insert - inserts before the first location that is >= the inserted element
+	- genericLength, genericTake, genericDrop, genericSplitAt, genericIndex and genericReplicate - Num versions of the Int classics
+	- nubBy, deleteBy, unionBy, intersectBy and groupBy - take the equality operator instead of assuming ==
+	- sortBy, insertBy, maximumBy and minimumBy - take the comparison predicate instead of using compare
+	- on - composition on two inputs applied to the same function and then combining the two results with one final function
+		on :: (b -> b -> c) -> (a -> b) -> a -> a -> c  
+		f `on` g = \x y -> f (g x) (g y)
+		- when using groupBy et al - usually use (==) `on` something
+		- when using sortBy et all - usually use compare `on` something
+- Data.Char
+	- a ton of character checks
+	- GeneralCategory - type enumeration of character categories
+	- toUpper, toLower, toTitle (capitalize each word)
+	- digitToInt, intToDigit
+	- ord - char to int code
+	- chr - int code to char 
+- Data.Map
+	- dictionaries
+	- qualify the namespace as it conflicts with Data.List and Prelude
+		- import qualified Data.Map as Map 
+	- fromList - takes a list of tuples and creates a map
+	- requires keys are Ord (so it can build a tree)
+	- empty - empty map
+	- insert - creates new map with kvp added
+	- immutable - functional world!
+	- null - empty check
+	- size
+	- singleton - create map with one kvp
+	- lookup - looks up value of a key, or nothing
+	- member - checks for a key (true/false)
+	- map/filter
+	- toList
+	- keys and elems
+- Data.Set (sets)
+	- union, difference etc
+
+### Custom modules
+
+module Name (function export list) where
+	... implementation
