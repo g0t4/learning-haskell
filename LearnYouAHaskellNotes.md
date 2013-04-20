@@ -341,3 +341,31 @@ f . g = \x -> f (g x)
 
 module Name (function export list) where
 	... implementation
+
+## Chapter 8 - Custom Types and Typeclasses
+
+### Types
+
+- custom data types
+- syntax: data type constructor = value constructors
+- ie: data Bool = False | True
+	- two value constructors: False and True
+- ie: data Shape = Circle Float Float Float | Rectangle Float Float Float Float deriving (Show)  
+	- two value constructors: Circle and Rectangle
+	- 3 anonymous arguments
+	- deriving (Show) makes it show-able automatically
+- simple format for declaring show-able fields
+	- data Person = Person { firstName :: String  
+                     , lastName :: String  
+                     , age :: Int  
+                     , height :: Float  
+                     , phoneNumber :: String  
+                     , flavor :: String  
+                     } deriving (Show)
+### Type parameters
+
+- Like generic (parameterized) types in c#
+- data Maybe a = Nothing | Just a
+- Dictionaries, Lists, Sets fall in here
+
+### Derived instances
