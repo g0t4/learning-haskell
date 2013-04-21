@@ -436,3 +436,81 @@ if blocks in do block must both be IO actions
 "the return in Haskell is really nothing like the return in most other languages"
 
 "use let bindings in do blocks to bind to names"
+
+- do - chain I/O actions
+	- let bindings don't require `in`, use them for calling pure functions to assign the result to a variable
+- void I/O actions don't rqeuire <- binding syntax, nothing to bind
+- I/O actions are composable like regular functions
+- return - not like return in imperative languages
+	- boxes a value into an I/O action result
+
+- I/O actions print/read
+	- putStr/putChar - print string or character
+	- getChar - get a character at a time, but it only accepts after return, then will be called once per character if in a recursive loop
+	- when - conditionally perform an I/O action or do nothing
+		- eliminates need for else return ()
+	- sequence - execute a sequence of I/O actions, if binding the result it will bind it to an array of return values
+	- mapM / mapM_ - applies a map to a list and sequence to the result (a common pattern)
+	- forever - repeat an I/O action forever
+	- forM - mapM with arguments reversed so map function comes last (readability as it can wrap lines)
+
+key point: I/O actions are values, when placed in the context of main the I/O action value will be executed
+
+### files
+
+- getContents - lazy I/O action to get contents of something (terminates on EOF)
+- interact - get a line from some input, transform it and output the transform
+- openFile - opens a file handle
+	openFile :: FilePath -> IOMode -> IO Handle 
+	handle <- openFile "girlfriend.txt" ReadMode 
+- hGetContents - lazy - gets contents of a handles, like getContents
+- hClose - close the handle
+- withFile - opens/closes the file for you
+
+    withFile "girlfriend.txt" ReadMode (\handle -> do  
+        contents <- hGetContents handle     
+        putStr contents)
+
+- also hGetLine, hPutStr, hPutStrLn, hGetChar
+- simplified use
+- readFile :: FilePath -> IO String
+- writeFile :: FilePath -> String -> IO ()
+- appendFile :: FilePath -> String -> IO ()
+- hSetBuffering - control buffering in lazy loaded handle resources
+- openTempFile - open a temporary (random named) file
+
+checkout System.Directory and System.IO
+
+### command line arguments
+
+System.Environment
+- getArgs :: IO [String] - get the arguments
+- getProgName :: IO String - get the program's name
+
+### randomness
+
+System.Random
+- random :: (RandomGen g, Random a) => g -> (a, g)
+- RandomGen - typeclass for a source of random numbers (ie: StdGen)
+- Random - typeclass for a set of random numbers (ie: Num, Bool, Int)
+- StdGen - typeclass that implements Random
+	- mkStdGen :: Int -> StdGen
+- usage: random (mkStdGen 100) :: (Int, StdGen) - makes a random Int
+- random (mkStdGen 949488) :: (Float, StdGen) - makes a random Float
+- randoms - take a generator and produce an infinite stream of random numbers
+	- take 5 $ randoms (mkStdGen 11) :: [Int]
+- randomR - random number in a range
+- randomRs - stream of random numbers in a range
+- getStdGen - returns IO StdGen, so you can get the system to introduce a random number for you - random side effects :), obviously has to be in the context of an I/O action (main) to execute it
+- newStdGen - create a new generator, otherwise getStdGen returns the same each time
+
+### Bytestrings
+
+- lazy lists are inefficient at times, bytestrings address performance
+- Data.ByteString 4- strict bytestrings, instantly evaluated, each item is 8 bytes only on first usage, not as used
+- Data.ByteString.Lazy - lazy bytestrings, but still only 8 bytes per item - unlike a list where each item is a promise, in lazy bytestrings, each chunk is a promise (usually 64k at a time)
+- pack/unpack - list of bytes to bytestring, or vice versa
+- cons - lazy add a byte
+- cons' - strict add a byte
+- empty - empty byte string
+- a bunch of methods like list
