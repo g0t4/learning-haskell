@@ -3,6 +3,8 @@
 http://www.haskell.org/platform/
 
 - ghc - compiler to native code
+	- ghc --make code.hs
+	- ./code
 - ghci - interactive haskell
 	- `:quit` to quit
 	- `:l myfunctions` to load/reload a haskell script from myfunctions.hs

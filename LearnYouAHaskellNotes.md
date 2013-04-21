@@ -410,3 +410,16 @@ module Name (function export list) where
 
 
 
+## Chapter 9 - IO
+
+"If we want to deal with impure data, we have to do it in an impure environment. So the taint of impurity spreads around much like the undead scourge and it's in our best interest to keep the I/O parts of our code as small as possible." - I've been preaching this a lot, lines up with my strategy for async calls in nodejs too, keep it in integration layers, sync within a domain.
+
+"I/O actions will only be performed when they are given a name of main or when they're inside a bigger I/O action that we composed with a do block."
+
+"use <- when you want to bind results of I/O actions to names"
+
+if blocks in do block must both be IO actions
+
+"the return in Haskell is really nothing like the return in most other languages"
+
+"use let bindings in do blocks to bind to names"
