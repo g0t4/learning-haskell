@@ -409,6 +409,19 @@ module Name (function export list) where
 			(x:xs) ++ ys = x : (xs ++ ys)  
 
 
+### Functor
+
+- generic interface around mapping
+	class Functor f where  
+	    fmap :: (a -> b) -> f a -> f b  
+- ie:
+	instance Functor [] where  
+    	fmap = map  
+
+### typefoo
+
+- types have kinds, * is a concrete type
+- generic types are curried like functions, can be partially applied
 
 ## Chapter 9 - IO
 
