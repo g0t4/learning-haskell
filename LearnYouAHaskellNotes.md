@@ -514,3 +514,10 @@ System.Random
 - cons' - strict add a byte
 - empty - empty byte string
 - a bunch of methods like list
+
+### Exceptions
+
+- Really intended for impure sections of code only, can't be handled in pure functions as you don't know when things will be evaluated and in what order.
+- Can be thrown anywhere
+- Getting the feeling it's preferred to use status codes in pure functions, but the reality is most errors are in I/O so that's already an impure concept so this shouldn't be a huge concern in pure areas, though things like validation are nice to encapsulate so we'll see.
+- Love that they have a UserException :)
