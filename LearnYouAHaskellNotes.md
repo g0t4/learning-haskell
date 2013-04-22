@@ -408,6 +408,40 @@ module Name (function export list) where
 			[]     ++ ys = ys  
 			(x:xs) ++ ys = x : (xs ++ ys)  
 
+## Typeclasses 102
+
+- use `class` to define a typeclass
+- ie:
+	class Eq a where  
+	    (==) :: a -> a -> Bool  
+	    (/=) :: a -> a -> Bool  
+	    x == y = not (x /= y)  
+	    x /= y = not (x == y) 
+- use `instance` to define an implementation of the methods of the typeclass on a type
+- implement typeclass interface:
+
+	data TrafficLight = Red | Yellow | Green 
+
+	instance Eq TrafficLight where  
+    	Red == Red = True  
+    	Green == Green = True  
+    	Yellow == Yellow = True  
+    	_ == _ = False  
+
+- because Eq defines == in terms of /= and vice versa, we only need to implement one to get the other!
+- sub classing type classes using typeclass constraints, num is a subclass of Eq:
+	
+	class (Eq a) => Num a where
+
+- implementing typeclasses on generic types
+	
+	instance (Eq m) => Eq (Maybe m) where  
+    	Just x == Just y = x == y  
+    	Nothing == Nothing = True  
+    	_ == _ = False  
+- :info YourTypeClass (see type classes)
+
+- you can implement an interface on any type/typeclass at any point, that's pretty cool! this might be like an **extension interface** (playing on the idea of extension methods in c#)
 
 ### Functor
 
@@ -520,4 +554,3 @@ System.Random
 - Really intended for impure sections of code only, can't be handled in pure functions as you don't know when things will be evaluated and in what order.
 - Can be thrown anywhere
 - Getting the feeling it's preferred to use status codes in pure functions, but the reality is most errors are in I/O so that's already an impure concept so this shouldn't be a huge concern in pure areas, though things like validation are nice to encapsulate so we'll see.
-- Love that they have a UserException :)
