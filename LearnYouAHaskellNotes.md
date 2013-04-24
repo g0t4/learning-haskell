@@ -554,3 +554,105 @@ System.Random
 - Really intended for impure sections of code only, can't be handled in pure functions as you don't know when things will be evaluated and in what order.
 - Can be thrown anywhere
 - Getting the feeling it's preferred to use status codes in pure functions, but the reality is most errors are in I/O so that's already an impure concept so this shouldn't be a huge concern in pure areas, though things like validation are nice to encapsulate so we'll see.
+- :) userError :: String -> IO Error
+- catch - a catch function, takes try action and handler action, clever to call it infix: toTry `catch` handler
+	- catch :: IO a -> (IO Error -> IO a) -> IO a
+	- handler :: IO Error -> IO a
+- built in error checks like: isAlreadyExistsError for files
+- to rethrow, just return the original IO Error
+
+## Chapter 11
+
+- "We don't have to think about types belonging to a big hierarchy of types. Instead, we think about what the types can act like and then connect them with the appropriate typeclasses."
+
+### Functors revisited
+- IO implements Functor so you can fmap to translate the result
+- fmap with functions is more or less an alias to composition with `.`
+	- fmap (*3) (+1) == (*3) . (+1)
+	- ((->) r) has a Functor implementation in Control.Monad.Instances
+- can partially apply a Functor (fmap) to create reusable maps that can be applied to various Functors, ie: `fmap (replicate 3)` would create a repeater that triplicates the value inside any functor.
+- Functor laws
+	- 1. "if we map the id function over a functor, the functor that we get back should be the same as the original functor"
+		- `id == (\x -> x)`
+		- 1. restated: fmap id = id
+	- 2. "composing two functions and then mapping the resulting function over a functor should be the same as first mapping one function over the functor and then mapping the other one"
+		- fmap (f.g) == (fmap f) . (fmap g)
+		- or fmap (f . g) F = fmap f (fmap g F)
+	- Justification: "If a type obeys the functor laws, we know that calling fmap on a value of that type will only map the function over it, nothing more."
+
+### Applicative functors
+
+A beefed up functor!
+We can do: `fmap 2 $ fmap (*) [1,2,2]` to create a list of partially applied functors and then to provide 2 as the secondary input to (*) to complete to computation but we can't do `fmap 2 $ fmap (*) Just 3` to get `Just 6` but with Applicative we can!
+
+class (Functor f) => Applicative f where  
+    pure :: a -> f a  
+    (<*>) :: f (a -> b) -> f a -> f b  
+
+- <*> is left associative
+- pure f <*> x equals fmap f x
+- Control.Applicative exports <$> which is an infix fmap operator
+
+(<$>) :: (Functor f) => (a -> b) -> f a -> f b  
+f <$> x = fmap f x  
+
+"To use a normal function on applicative functors, just sprinkle some <$> and <*> about and the function will operate on applicatives and return an applicative."
+
+- list Applicative implementation
+
+instance Applicative [] where  
+    pure x = [x]  
+    fs <*> xs = [f x | f <- fs, x <- xs]  
+
+note: left operator is a list of functions so this results in a join if multiple operators supplied, ie:
+
+if I wanted to multiply all items in a list by 3 and divide by 3 I could:
+
+[(*3),(/3)] <*> [1,2]
+
+also, "Using the applicative style on lists is often a good replacement for list comprehensions." all 3 of these are the same:
+
+pure (*3) <*> [1,2,3] 
+[(*3)] <*> [1,2,3] 
+[(x*3) | x <- [1,2,3]]
+
+- Applicative and IO
+
+instance Applicative IO where  
+    pure = return  
+    a <*> b = do  
+        f <- a  
+        x <- b  
+        return (f x) 
+
+so now we can do:
+
+pure ("Hello "++) <*> getLine
+
+<*> is piping the result of getLine through "Hello "++
+
+- Appicative functions
+
+instance Applicative ((->) r) where  
+    pure x = (\_ -> x)  
+    f <*> g = \x -> f x (g x)  
+
+- ZipList 
+
+apply a separate function per item in a list
+getZipList to show them
+getZipList $ ZipList [(+1),(+2),(+3)] <*> ZipList [100,100,100]
+
+- liftA2 (short hand)
+
+liftA2 :: (Applicative f) => (a -> b -> c) -> f a -> f b -> f c  
+liftA2 f a b = f <$> a <*> b  
+
+- Applicative laws
+
+pure f <*> x = fmap f x
+pure id <*> v = v
+pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+pure f <*> pure x = pure (f x)
+u <*> pure y = pure ($ y) <*> u
+
