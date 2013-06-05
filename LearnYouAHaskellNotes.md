@@ -656,3 +656,11 @@ pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
 pure f <*> pure x = pure (f x)
 u <*> pure y = pure ($ y) <*> u
 
+### newtype
+
+- take one type and wrap it as a new type
+- newtype ZipList a = ZipList { getZipList :: [a] }  
+- only one ctor and one field
+
+- data v type v newtype
+	"If you just want your type signatures to look cleaner and be more descriptive, you probably want **type** synonyms. If you want to take an existing type and wrap it in a new type in order to make it an instance of a type class, chances are you're looking for a **newtype**. And if you want to make something completely new, odds are good that you're looking for the **data** keyword."
